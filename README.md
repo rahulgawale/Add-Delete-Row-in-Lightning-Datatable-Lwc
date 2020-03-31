@@ -9,7 +9,7 @@ Simple LWC application to demonstrate the add, delete row to/from a lightning-da
 1. Create a new web component with the name addDelDatatable.
 2. Copy and paste the code from addDelDatatable to your component's respective files
    addDelDatatable.js, addDelDatatable.html, addDelDatatable.css.
-3. Use the below example code to implement the table. Replace the Example with your desired
+3. Use the below example code to implement the table. Replace the `Example` class name in JS with your desired parent component class name.
 
 
 #### Sample JS Code
