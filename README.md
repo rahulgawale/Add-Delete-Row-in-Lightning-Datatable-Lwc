@@ -2,15 +2,15 @@
 
 Simple LWC application to demonstrate the add, delete row to/from a lightning-data-table. Modal form to add a row in data-table. Open 'Edit' modal in Lightning Datatable, Delete Row Datatable, Add Row Datatable.
 
+# Live playground example
 
+[Check out live example here](https://webcomponents.dev/edit/bkuc3TLe8cY4xJcoaleS/src/app.html)
 
-## Here are the steps to use the Component.
+## Steps to use the Component.
 
 1. Create a new web component with the name addDelDatatable.
-2. Copy and paste the code from addDelDatatable to your component's respective files
-   addDelDatatable.js, addDelDatatable.html, addDelDatatable.css.
+2. Copy and paste the code from addDelDatatable to your component's respective files addDelDatatable.js, addDelDatatable.html, addDelDatatable.css.
 3. Use the below example code to implement the table. Replace the `Example` class name in JS with your desired parent component class name.
-
 
 #### Sample JS Code
 
@@ -40,12 +40,13 @@ export default class Example extends LightningElement {
 ```
 
 #### How to Get the table data in parent component.
+
 Use below method to get updated table data from the `addDelDatatable` component into its parent.
 
 ```
 handleGetData() {
-    let datafromchild = this.template.querySelector('c-add-del-datatable').data;
-    console.log(`Got ${datafromchild.length} record/s from the Child Component!`);
-    console.log('data from child =>' + JSON.stringify(datafromchild));
+    let dataFromChild = this.template.querySelector('c-add-del-datatable').data;
+    console.log(`Got ${dataFromChild.length} record/s from the Child Component!`);
+    console.log('data from child =>' + JSON.stringify(dataFromChild));
 }
 ```
