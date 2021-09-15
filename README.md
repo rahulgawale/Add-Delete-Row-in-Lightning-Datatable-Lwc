@@ -2,7 +2,7 @@
 
 Simple LWC application to demonstrate the add, delete row to/from a lightning-data-table. Modal form to add a row in data-table. Open 'Edit' modal in Lightning Datatable, Delete Row Datatable, Add Row Datatable.
 
-# Live playground example
+## Live playground example
 
 [Check out live example here](https://webcomponents.dev/edit/bkuc3TLe8cY4xJcoaleS/src/app.html)
 
