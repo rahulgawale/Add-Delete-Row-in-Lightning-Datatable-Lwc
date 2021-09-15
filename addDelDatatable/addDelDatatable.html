@@ -1,30 +1,104 @@
 <template>
-	<lightning-button class="slds-p-around_x-small" variant="brand" label="Add Row" title="Add Row" onclick={handleAddRow}></lightning-button>
-	<div class="slds-p-around_x-small">
-		<lightning-datatable key-field="id" data={_data} columns={_columns} onrowaction={handleRowAction}>
-		</lightning-datatable>
-	</div>
+    <lightning-button
+        class="slds-var-p-around_x-small"
+        variant="brand"
+        label="Add Row"
+        title="Add Row"
+        onclick={handleAddRow}
+    ></lightning-button>
 
-	<template if:true={showModal}>
-		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
-		 class="slds-modal slds-fade-in-open">
-			<div class="slds-modal__container">
-				<header class="slds-modal__header">
-                    <lightning-button-icon class="slds-modal__close" onclick={handleCancel} icon-name="utility:close" alternative-text="Close" title="Close"></lightning-button-icon>
-                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Edit Row</h2>
+    <div class="slds-var-p-around_x-small">
+        <lightning-datatable
+            key-field="id"
+            data={_data}
+            columns={_columns}
+            onrowaction={handleRowAction}
+        >
+        </lightning-datatable>
+    </div>
+
+    <template if:true={showModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon
+                        class="slds-modal__close"
+                        onclick={handleCancel}
+                        icon-name="utility:close"
+                        alternative-text="Close"
+                        title="Close"
+                    ></lightning-button-icon>
+                    <h2
+                        id="modal-heading-01"
+                        class="slds-modal__title slds-hyphenate"
+                    >Edit Row</h2>
                 </header>
-                <div class="slds-modal__content slds-p-around_medium my-modal-inputs" id="modal-content-id-1">
-                    <div class="slds-grid slds-wrap">
-                    <template if:true={_inputcolumns} for:each={_inputcolumns} for:item="column">
-                        <div key={column.fieldName} class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12 slds-p-around_x-small">
-                            <lightning-input type={column.type} name={column.fieldName} label={column.label} required={column.required} value={column.displayValue} onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </template>
-                    </div>
+                <div
+                    class="slds-modal__content slds-var-p-around_medium my-modal-inputs"
+                    id="modal-content-id-1"
+                >
+                    <lightning-layout multiple-rows>
+                        <template
+                            if:true={_inputColumns}
+                            for:each={_inputColumns}
+                            for:item="column"
+                        >
+                            <lightning-layout-item
+                                key={column.fieldName}
+                                padding="around-small"
+                                size="12"
+                                small-device-size="6"
+                                medium-device-size="4"
+                                large-device-size="3"
+                            >
+                                <lightning-input
+                                    if:false={column.isPicklist}
+                                    type={column.type}
+                                    name={column.fieldName}
+                                    label={column.label}
+                                    required={column.required}
+                                    value={column.displayValue}
+                                    onchange={handleInputChange}
+                                    placeholder={column.formPlaceholder}
+                                ></lightning-input>
+
+                                <lightning-combobox
+                                    if:true={column.isPicklist}
+                                    name={column.fieldName}
+                                    label={column.label}
+                                    required={column.required}
+                                    value={column.displayValue}
+                                    placeholder={column.formPlaceholder}
+                                    options={column.options}
+                                    onchange={handleInputChange}
+                                ></lightning-combobox>
+                            </lightning-layout-item>
+                        </template>
+                    </lightning-layout>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning-button label="Cancel" title="Cancel" onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
-                    <lightning-button variant="brand" label="Save" title="Save" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button
+                        label="Cancel"
+                        title="Cancel"
+                        onclick={handleCancel}
+                        class="slds-var-m-left_x-small"
+                    >
+                    </lightning-button>
+                    <lightning-button
+                        variant="brand"
+                        label="Save"
+                        title="Save"
+                        onclick={handleSave}
+                        class="slds-var-m-left_x-small"
+                    >
+                    </lightning-button>
                 </footer>
             </div>
         </section>

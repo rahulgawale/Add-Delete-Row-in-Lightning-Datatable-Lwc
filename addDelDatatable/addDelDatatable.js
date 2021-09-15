@@ -1,117 +1,115 @@
-
-import { LightningElement, track, api } from 'lwc';
+import {LightningElement, track, api} from "lwc";
 
 export default class AddDelDatatable extends LightningElement {
-    @track _columns = [];
-    @track _data = [];
-    @track _inputcolumns;
+	@track _columns = [];
+	@track _data = [];
+	@track _inputColumns;
 
-    @api
-    get columns() {
-        return this._columns;
-    }
+	@api
+	get columns() {
+		return this._columns;
+	}
 
-    set columns(value) {
-        this._columns = value;
-        if (value) {
-            let tempcols = [...value];
-            tempcols.push({ type: 'button-icon', typeAttributes: { iconName: 'utility:delete', name: 'delete', iconClass: 'slds-icon-text-error' }, fixedWidth: 50 });
-            tempcols.push({ type: 'button-icon', typeAttributes: { iconName: 'utility:edit', name: 'edit' }, fixedWidth: 50 });
-            this._columns = tempcols;
-            
-            let colData = JSON.parse(JSON.stringify(value))
-            colData = colData.filter(column => column.fieldName);
-            colData.forEach(element => {
-                if (this.tempRow.hasOwnProperty(element.fieldName)) {
-                    element.displayValue = this.tempRow[element.fieldName];
-                }
-            });
-            this._inputcolumns = colData;
-        }
-    }
+	set columns(value) {
+		this._columns = value;
+		if (value) {
+			let tempCols = [...value];
+			tempCols.push({type: "button-icon", typeAttributes: {iconName: "utility:delete", name: "delete", iconClass: "slds-icon-text-error"}, fixedWidth: 50});
+			tempCols.push({type: "button-icon", typeAttributes: {iconName: "utility:edit", name: "edit"}, fixedWidth: 50});
+			this._columns = tempCols;
 
-    @api
-    get data() {
-        return this._data;
-    }
+			let colData = JSON.parse(JSON.stringify(value));
+			colData = colData.filter((column) => column.fieldName);
+			colData.forEach((element) => {
+				if (this.tempRow.hasOwnProperty(element.fieldName)) {
+					element.displayValue = this.tempRow[element.fieldName];
+				}
+			});
+			this._inputColumns = colData;
+		}
+	}
 
-    set data(value) {
-        this._data = value;
-    }
+	@api
+	get data() {
+		return this._data;
+	}
 
-    @track showModal;
-    @track tempRow = {};
-    editMode = false;
+	set data(value) {
+		this._data = value;
+	}
 
-    handleRowAction(event) {
-        if (event.detail.action.name === 'delete') {
-            this.deleteSelectedRow(event.detail.row);
-        } else if (event.detail.action.name === 'edit') {
-            this.editMode = true;
-            this.openEditForm(event.detail.row);
-        }
-    }
+	@track showModal;
+	@track tempRow = {};
+	editMode = false;
 
-    handleInputChange(event) {
-        this.tempRow[event.target.name] = event.target.value;
-    }
+	handleRowAction(event) {
+		if (event.detail.action.name === "delete") {
+			this.deleteSelectedRow(event.detail.row);
+		} else if (event.detail.action.name === "edit") {
+			this.editMode = true;
+			this.openEditForm(event.detail.row);
+		}
+	}
 
-    deleteSelectedRow(deleteRow) {
-        let newData = JSON.parse(JSON.stringify(this._data));
-        newData = newData.filter(row => row.uid !== deleteRow.uid);
+	handleInputChange(event) {
+		this.tempRow[event.target.name] = event.target.value;
+	}
 
-        // recalculate uids
-        newData.forEach((element, index) => element.uid = index + 1);
-        this._data = newData;
-    }
+	deleteSelectedRow(deleteRow) {
+		let newData = JSON.parse(JSON.stringify(this._data));
+		newData = newData.filter((row) => row.uid !== deleteRow.uid);
 
-    handleCancel() {
-        this.tempRow = {};
-        this.showModal = false;
-        this.editMode = false;
-        this.editindex = undefined;
-    }
+		// recalculate uids
+		newData.forEach((element, index) => (element.uid = index + 1));
+		this._data = newData;
+	}
 
-    handleAddRow() {
-        this.tempRow = {};
-        // refresh inputcolumn
-        let tempinput = [...this._inputcolumns];
-        tempinput.forEach(element => element.displayValue = undefined);
-        this._inputcolumns = tempinput;
-        this.showModal = true;
-    }
+	handleCancel() {
+		this.tempRow = {};
+		this.showModal = false;
+		this.editMode = false;
+		this.editIndex = undefined;
+	}
 
-    handleSave() {
-        const allValid = [...this.template.querySelectorAll(`lightning-input`)]
-            .reduce((validSoFar, inputCmp) => {
-                inputCmp.reportValidity();
-                return validSoFar && inputCmp.checkValidity();
-            }, true);
+	handleAddRow() {
+		this.tempRow = {};
+		// refresh inputColumn
+		let tempInput = [...this._inputColumns];
+		tempInput.forEach((element) => (element.displayValue = undefined));
+		this._inputColumns = tempInput;
+		this.showModal = true;
+	}
 
-        if (!allValid) {
-            return;
-        }
+	handleSave() {
+		const allValid = [...this.template.querySelectorAll(`lightning-input`)].reduce((validSoFar, inputCmp) => {
+			inputCmp.reportValidity();
+			return validSoFar && inputCmp.checkValidity();
+		}, true);
 
-        let newData = JSON.parse(JSON.stringify(this._data));
-        if (!this.editMode) {
-            // you can use any unique and required field instead of 'uid'.
-            //calculate ui
-            this.tempRow.uid = this._data.length + 1;
-            newData.push(this.tempRow);
-        } else {
-            newData[this.editindex] = this.tempRow;
-            this.editindex = undefined;
-            this.editMode = false;
-        }
-        this._data = newData;
-        this.tempRow = {};
-        this.showModal = false;
-    }
+		if (!allValid) {
+			return;
+		}
 
-    openEditForm(editRow) {
-        this.editindex = this._data.findIndex(row => row.uid === editRow.uid);
-        this.tempRow = { ...this._data[this.editindex] };
-        this._inputcolumns.forEach(element => element.displayValue = this.tempRow[element.fieldName]);
-        this.showModal = true;
-    }
+		let newData = JSON.parse(JSON.stringify(this._data));
+		if (!this.editMode) {
+			// you can use any unique and required field instead of 'uid'.
+			//calculate ui
+			this.tempRow.uid = this._data.length + 1;
+			newData.push(this.tempRow);
+		} else {
+			newData[this.editIndex] = this.tempRow;
+			this.editIndex = undefined;
+			this.editMode = false;
+		}
+		this._data = newData;
+		this.tempRow = {};
+		this.showModal = false;
+	}
+
+	openEditForm(editRow) {
+		this.editIndex = this._data.findIndex((row) => row.uid === editRow.uid);
+		this.tempRow = {...this._data[this.editIndex]};
+		this._inputColumns.forEach((element) => (element.displayValue = this.tempRow[element.fieldName]));
+		this.showModal = true;
+	}
 }
